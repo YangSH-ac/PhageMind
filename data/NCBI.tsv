@@ -1,0 +1,55 @@
+Alteromonas			
+Phage			
+Name	Official name	NCBI Accession	Reference
+R22Y	vB_AmeP-R22Y	PP212876.1	"Yu C, Yu M, Ma R, Wei S, Jin M, Jiao N, Zheng Q, Zhang R, Feng X.2025.A novel Alteromonas phage with tail fiber containing six potential iron-binding domains. Microbiol Spectr13:e00934-24.https://doi.org/10.1128/spectrum.00934-24"
+R8W	vB_AmeP_R8W	MW043865.1	"Feng X, Yan W, Wang A, Ma R, Chen X, Lin T-H, Chen Y-L, Wei S, Jin T, Jiao N, et al. A Novel Broad Host Range Phage Infecting Alteromonas. Viruses. 2021; 13(6):987. https://doi.org/10.3390/v13060987"
+R7M	vB_AcoS-R7M	NC_048878.1	"Ma R, Lai J, Chen X, Wang L, Yang Y, Wei S, Jiao N, Zhang R. A Novel Phage Infecting Alteromonas Represents a Distinct Group of Siphophages Infecting Diverse Aquatic Copiotrophs. mSphere. 2021 Jun 30;6(3):e0045421. doi: 10.1128/mSphere.00454-21. Epub 2021 Jun 9. PMID: 34106770; PMCID: PMC8265664."
+R9Y1	vB_AmaS-R9Y1	OM287554.1	"Yang Y, Ma R, Yu C, Ye J, Chen X, Wang L,Jiao N, Zhang R,2022.A Novel Alteromonas Phage Lineage with a Broad Host Range and Small Burst Size. Microbiol Spectr10:e01499-22.https://doi.org/10.1128/spectrum.01499-22"
+R9Y2	vB_AmaS-R9Y2	OM732336.1	
+R9Y3	vB_AmaS-R9Y3	OM732337.1	
+			
+			
+			
+Alteromonas			
+Bacterium			
+Name	Official name	NCBI Accession	Reference
+R10SW13	Alteromonas addita R10SW13	CP014322.1	
+KCTC52655	Alteromonas aestuariiviven KCTC 52655	NZ_QRHA00000000.1	
+190	Alteromonas alba 190	NZ_PVNP00000000.1	
+H17	Alteromonas australica H17	CP008849.1	
+KCTC42603	Alteromonas confluentis KCTC 42603	NZ_MDHN00000000.1	
+LMG24078	Alteromonas genovensis LMG 24078	NZ_JAAAWO000000000.1	
+9a2	Alteromonas gracilis 9a2	NZ_PVNO00000000.1	
+JW12	Alteromonas lipolytica JW12	NZ_MJIC00000000.1	
+ATCC27126	Alteromonas macleodii ATCC 27126	NC_018632.1	
+DE	Alteromonas mediterranea DE	NC_011138.3	
+SN2	Alteromonas naphthalenivorans SN2	CP002339.1	
+5.12	Alteromonas pelagimontana 5.12	NZ_CP052766.1	
+LMG21861	Alteromonas stellipolaris LMG 21861	CP013926.1	
+AD006	Alteromonas macleodii AD006	NZ_JWLX00000000.1	
+AD037	Alteromonas macleodii AD037	NZ_JWLY00000000.1	
+DE1	Alteromonas mediterranea DE1	"NC_019393.1, NC_019394.1"	
+AD45	Alteromonas macleodii AD45	"NC_018679.1, NC_018680.1"	
+MED64	Alteromonas mediterranea MED64	NC_023045.1	
+U4	Alteromonas mediterranea U4	"NC_021710.1, NC_021711.1"	
+U7	Alteromonas mediterranea U7	NC_021717.1	
+U8	Alteromonas mediterranea U8	NC_021712.1	
+UM4b	Alteromonas mediterranea UM4b	NC_021714.1	
+UM7	Alteromonas mediterranea UM7	"NC_021713.1, NC_021718.1"	
+UM8	Alteromonas mediterranea UM8	"NZ_CP013928.1, NZ_CP013929.1"	
+			
+			
+			
+Vibrio			
+Phage			
+Name	Official name	NCBI Accession	Reference
+202005BS2403	vB_VpaS_R32L	PX393085.1	
+P15	vB_ValS_R23Z	MT442039.1	"Yunlan Yang, Wanxuan Zhong, Huiyu Ding, Keming Shi, Haipeng Guo, Demin Zhang, Lanlan Cai, Min Hsiao, Jie Xu, Rui Zhang, A lytic vibriophage as a potential biocontrol agent against vibriosis in aquaculture, Fish & Shellfish Immunology, Volume 165, 2025, 110506, ISSN 1050-4648, https://doi.org/10.1016/j.fsi.2025.110506."
+P16	vB_ValM_R10Z	MT612988.1	
+P63	vB_ValM_R11Z	MT612989.1	
+P64	vB_ValM_R13Z	PX512290.1	
+P72	vB_ValS_R12Z	PP094284.1	"Keming Shi, Huiyu Ding, Wanxuan Zhong, Wenqing Li, Min Hsiao, Bu Xu, Haipeng Guo, Jing Zhao, Jie Xu, Demin Zhang, Yunlan Yang, Rui Zhang, A broad-spectrum vibriophage with potential for phage therapy against Vibrio alginolyticus in shrimp aquaculture, Aquaculture, Volume 612, Part 2, 2026, 743215, ISSN 0044-8486, https://doi.org/10.1016/j.aquaculture.2025.743215."
+P74	vB_ValA_R15Z	OQ745668.1	
+phiST	vB_VpaP_R28Z	PQ289634.1	"Zhong, H., Huang, W., Lin, K.T. et al. A virulent phage vB_VpaP_R28Z infecting Vibrio parahaemolyticus with potential for therapeutic application. BMC Microbiol 25, 433 (2025). https://doi.org/10.1186/s12866-025-04133-x"
+vB_VpaM_R16F_C1_2	vB_VpaM_R16F	OP793884.1	"Chen, Y., Li, W., Shi, K. et al. Isolation and characterization of a novel phage belonging to a new genus against Vibrio parahaemolyticus. Virol J 20, 81 (2023). https://doi.org/10.1186/s12985-023-02036-9"
+vB_VpaM_R20L_6	vB_VpaM_R20L	PP839372.1	
