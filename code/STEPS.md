@@ -38,6 +38,7 @@ List extraction:
   -l FILE, --list FILE  Pattern list file
   -r, --reverse         Exclude list patterns
 ```
+If these sequences are in contig form, it is possible that housekeeping genes may be distributed across multiple contigs. To achieve more accurate retrieval, the contigs can be assembled using [RagTag](https://github.com/malonge/RagTag) prior to extraction.
 ### Phages
 For phage genomes, we recommend to use [pharokka](https://github.com/gbouras13/pharokka) for protein translation and annotation.
 
