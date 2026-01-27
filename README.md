@@ -24,6 +24,6 @@ cd PhageMind/code
 conda activate phagemind
 ```
 ## Usage
-For detailed instruction, refer to `code/STEPS.md` for the model and `data/DATA.md` for the data.
+For detailed instruction, refer to `code/STEPS.md`.
 ## References
 The arXiv version can be found via: [arXiv version](https://arxiv.org/abs/2601.15886)
