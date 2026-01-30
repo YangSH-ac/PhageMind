@@ -15,6 +15,8 @@ def main():
     for i, bact in enumerate(df.index):       # bacteria rows
         for j, phage in enumerate(df.columns): # phage columns
             val = df.loc[bact, phage]
+            if pd.isna(val):
+                continue
             try:
                 num = float(val)
             except Exception:

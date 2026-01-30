@@ -3,13 +3,12 @@ def parse_args():
     parser = argparse.ArgumentParser(description='MAML fine-tuning for link prediction')
     parser.add_argument('-ip', required=True, type=str, metavar='PATH', help='Input directory')
     parser.add_argument('-o', required=True, type=str, metavar='PATH', help='Output directory')
-    parser.add_argument('-i1', type=str, metavar='STR', help='Input file prefix1')
-    parser.add_argument('-i2', type=str, metavar='STR', help='Input file prefix2')
+    parser.add_argument('-i1', type=str, metavar='STR', help='Input file prefix')
     parser.add_argument('-si', default=2, choices=[1,2], type=int, metavar='INT', help='Small index (default: 2)')
     parser.add_argument('-sd', default=756, type=int, metavar='INT', help='Small dimension (default: 756)')
     parser.add_argument('-s2', default=86, type=int, metavar='INT', help='Seed for torch (default: 86)')
     parser.add_argument('-ss', default='64,32,16,8', type=str, metavar='INT,INT,INT,INT', help='Number of nodes (default: 64,32,16,8)')
-    parser.add_argument('-a', default=None, type=int, metavar='INT', help='Adaptor dim (default: No adaptor)')
+    parser.add_argument('-a', default=16, type=int, metavar='INT', help='Adaptor dim (default: No adaptor)')
     parser.add_argument('-ep', default=1000, type=int, metavar='INT', help='Number of step for training (default: 1000)')
     parser.add_argument('-prop', default=0.75, type=float, metavar='FLOAT', help='Proportion of nodes to sample (default: 0.75)')
     parser.add_argument('-sr', default=1, type=float, metavar='FLOAT', help='Support set ratio (default: 1)')
@@ -87,8 +86,8 @@ def load_single_dataset(path, prefix1, prefix2, small_idx=2, small_dim=728):
     tmp_path = os.path.join(path, prefix1)
     data_all = {}
     for types in ['train', 'valid', 'test']:
-        fea_path = tmp_path + f'_{types}_{prefix2}_features.csv'
-        edge_path = tmp_path + f'_{types}_{prefix2}_edges.csv'
+        fea_path = tmp_path + f'_{types}_features.csv'
+        edge_path = tmp_path + f'_{types}_edges.csv'
         if not os.path.exists(fea_path) or not os.path.exists(edge_path):
             printd(f"File not exist - {fea_path} or {edge_path}", types=1)
             return None
@@ -218,11 +217,11 @@ if __name__ == "__main__":
     os.makedirs(args.o, exist_ok=True)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     printd(f"Using device: {device}")
-    if args.i1 and args.i2:
-        printd(f"Using single dataset: prefix='{args.i1}', suffix='{args.i2}'")
-        data_train, data_valid, data_test = load_single_dataset(args.ip, args.i1, args.i2, small_dim=args.sd, small_idx=args.si)
+    if args.i1:
+        printd(f"Using single dataset: prefix='{args.i1}'")
+        data_train, data_valid, data_test = load_single_dataset(args.ip, args.i1, small_dim=args.sd, small_idx=args.si)
         individual_datasets = [{'train': data_train.clone(),'valid': data_valid.clone(),'test': data_test.clone(),
-                                'name': f"{args.i1}_{args.i2}",'id': 0}]
+                                'name': f"{args.i1}",'id': 0}]
     else: 
         printd(f"Auto-detecting all datasets in {args.ip}")
         datasets_list = find_all_datasets(args.ip)
@@ -270,7 +269,7 @@ if __name__ == "__main__":
                 best_val_losses[i] = val_loss
                 patience_counters[i] = 0
                 best_epochs[i] = step + 1
-                model_path = os.path.join(args.o, f'best_model_dataset_{i}_{ds["name"]}.pth')
+                model_path = os.path.join(args.o, f'{ds["name"]}_best_model.pth')
                 torch.save(model.state_dict(), model_path)
             else:
                 patience_counters[i] += 1
@@ -282,7 +281,7 @@ if __name__ == "__main__":
     printd("Using the best model of each dataset for testing")
     all_results = []
     for i, ds in enumerate(individual_datasets):
-        model_path = os.path.join(args.o, f'best_model_dataset_{i}_{ds["name"]}.pth')
+        model_path = os.path.join(args.o, f'{ds["name"]}_best_model.pth')
         if os.path.exists(model_path):
             model.load_state_dict(torch.load(model_path, weights_only=True))
             model.eval()
@@ -306,7 +305,7 @@ if __name__ == "__main__":
                                      train_index = ds_train.edge_label.cpu(), train_label = ds_train.true_label.cpu(), 
                                      val_index = ds_valid.edge_label.cpu(), val_label = ds_valid.true_label.cpu(),
                                      test_index = ds_test.edge_label.cpu(), test_label = ds_test.true_label.cpu())
-            dataset_output_dir = os.path.join(args.o, f"dataset_{i}_{ds['name']}")
+            dataset_output_dir = os.path.join(args.o, f"{ds['name']}")
             os.makedirs(dataset_output_dir, exist_ok=True)
             generate_result(params, dataset_output_dir, num_nodes=2, Name='_maml')
         else:

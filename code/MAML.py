@@ -8,7 +8,7 @@ def parse_args():
     parser.add_argument('-sn', type=str, metavar='INT,...', help='Dataset index for test, seperated by ",", will override -s1 and -t')
     parser.add_argument('-s2', default=86, type=int, metavar='INT', help='Seed for torch (default: 86)')
     parser.add_argument('-ss', default='64,32,16,8', type=str, metavar='INT,INT,INT,INT', help='Number of nodes (default: 64,32,16,8)')
-    parser.add_argument('-a', default=None, type=int, metavar='INT', help='Adaptor dim (default: No adaptor)')
+    parser.add_argument('-a', default=16, type=int, metavar='INT', help='Adaptor dim (default: 16)')
     parser.add_argument('-ep', default=1000, type=int, metavar='INT', help='Number of step for training (default: 1000)')
     parser.add_argument('-prop', default=0.75, type=float, metavar='FLOAT', help='Proportion of nodes to sample (default: 0.75)')
     parser.add_argument('-sr', default=0.3, type=float, metavar='FLOAT', help='Support set ratio (default: 0.3)')
@@ -219,10 +219,10 @@ if __name__ == "__main__":
         valid_dirs = all_dirs[args.t:]
     all_train_data = []; all_val_data = []
     for g in sampled_dirs:
-        train_d, valid_d, test_d = prepare_task_data(matched_groups[g], args, device=device, mode="train")
+        train_d, valid_d, test_d = prepare_task_data(matched_groups[g], args, device=device)
         all_train_data.append({'train_data': train_d, 'valid_data': valid_d, 'test_data': test_d, 'genus': matched_groups[g]['wildcard']})
     for g in valid_dirs:
-        train_d, valid_d, test_d = prepare_task_data(matched_groups[g], args, device=device, mode="valid")
+        train_d, valid_d, test_d = prepare_task_data(matched_groups[g], args, device=device)
         all_val_data.append({'train_data': train_d, 'valid_data': valid_d, 'test_data': test_d, 'genus': matched_groups[g]['wildcard']})
     best_valid_loss = float('inf')
     patience_counter = 0
@@ -260,7 +260,7 @@ if __name__ == "__main__":
                     printd("Early stopping triggered.")
                     break
     printd("Loading best model for testing...")
-    model.load_state_dict(torch.load(os.path.join(args.o, 'best_maml_model.pth'), weights_only=True))
+    model.load_state_dict(torch.load(os.path.join(args.o, 'MAML_best_model.pth'), weights_only=True))
     model.eval()
     for g in [*all_train_data, *all_val_data]:
         printd(f"Testing on dataset: {g['genus']}")

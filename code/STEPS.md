@@ -6,11 +6,11 @@ For bacterial genomes, we recommend to use [RAST](https://rast.nmpdr.org/) for p
 After obtaining the annotated protein sequences and the corresponding DNA sequences, the continuous O‑antigen biosynthesis gene cluster can be identified based on the housekeeping genes listed in `HousekeepingGenes.tsv`. For example, in Escherichia, for single bacterial strain
 ```
 # For protein sequence
-python FastaExtract.py -i BE_protein.fa -o BE_protein_extract.fa \
+python FastaExtract.py -i Escherichia/bacteria/RAST/protein/BE.fasta -o Escherichia/bacteria/proc/protein/BE.fasta \
                        -s "UTP--glucose-1-phosphate uridylyltransferase" \
                        -e "6-phosphogluconate dehydrogenase" 
 # Corresponding For DNA sequence
-python FastaExtract.py -i BE_DNA.fa -o BE_DNA_extract.fa \
+python FastaExtract.py -i Escherichia/bacteria/RAST/DNA/BE.fasta -o Escherichia/bacteria/proc/DNA/BE.fasta \
                        -s "UTP--glucose-1-phosphate uridylyltransferase" \
                        -e "6-phosphogluconate dehydrogenase"
 ```
@@ -42,18 +42,18 @@ If these sequences are in contig form, it is possible that housekeeping genes ma
 ### Phages
 For phage genomes, we recommend to use [pharokka](https://github.com/gbouras13/pharokka) for protein translation and annotation.
 
-After obtaining the annotated protein sequences and the corresponding DNA sequences, you can manually search for RBP proteins annotated as *tail fiber/fibre* or *tail spike* and extract them. 
+After obtaining the annotated protein sequences and the corresponding DNA sequences, you can manually search for RBP proteins annotated as *tail fiber/fibre*, *tail spike*, or *receptor binding* and extract them. 
 
 If necessary, you can further use [AlphaFold2](https://github.com/google-deepmind/alphafold) for structural prediction and then manually determine which proteins are RBPs for extraction.
 ## 2. Feature generation
 Once the continuous O‑antigen biosynthesis gene clusters of all bacteria and the RBPs of phages (including both protein and DNA sequences) have been obtained, feature extraction can be performed. 
 ```
 # For single bacterial strain
-python FeatureGenerate.py -d BE_DNA_extract.fa -p BE_protein_extract.fa -o bactEsch.csv \
-                          -s mean,std,min,q25,median,q75,max
+python FeatureGenerate.py -d Escherichia/bacteria/proc/DNA/BE.fasta -p Escherichia/bacteria/proc/protein/BE.fasta \
+                          -o InputDir/bactEscherichia.csv -s mean,std,min,q25,median,q75,max
 # For single phage
-python FeatureGenerate.py -d T4LD_DNA_extract.fa -p T4LD_protein_extract.fa -o phageEsch.csv \
-                          -s mean,min,max
+python FeatureGenerate.py -d Escherichia/phages/proc/DNA/T4LD.fasta -p Escherichia/phages/proc/protein/T4LD.fasta \
+                          -o InputDir/phageEscherichia.csv -s mean,min,max
 ```
 For more information about this script, run
 ```
@@ -81,7 +81,7 @@ optional arguments:
 ### Interaction files
 To ensure the correctness of the interactions, please make sure that the order of bacteria/phages in the generated feature file matches the order in the interaction file. For the interaction file, convert the TSV file into the required format (for CSV files, use the -c option)
 ```
-python FormatFile.py -i interaction_matrix.tsv -o edgeEsch.csv
+python FormatFile.py -i Escherichia/interaction/Interaction.tsv -o InputDir/edgeEscherichia.csv
 ```
 For more information about this script, run
 ```
@@ -100,9 +100,9 @@ optional arguments:
   -r, --reverse         Interpret columns as bacteria and rows as phages
 ```
 ## 3. Meta-learning
-Once feature generation is complete, place all input files into a single directory (e.g., `input_dir`). Each dataset should contain three files, such as `bactDATA1.csv`, `phageDATA1.csv`, and `edgeDATA1.csv`. Then run the MAML training process to obtain the Meta-learning model.
+Once feature generation is complete, place all input files into a single directory (e.g., `InputDir`). Each dataset should contain three files, such as `bactEscherichia.csv`, `phageEscherichia.csv`, and `edgeEscherichia.csv`. Then run the MAML training process to obtain the Meta-learning model.
 ```
-python MAML.py -i input_dir -o maml_dir
+python MAML.py -i InputDir -o MAMLDir
 ```
 For more information about MAML settings, run
 ```
@@ -138,12 +138,12 @@ optional arguments:
 ## 4. Fune-tuning
 After completing MAML meta‑learning and obtaining the meta‑learned model, fine‑tuning on individual datasets is required. The first step is to split the dataset.
 ```
-python SplitData.py -i input_dir -o split_dir
+python SplitData.py -i InputDir -o SplitDir
 ```
 For more information about data spliting, run
 ```
 > python SplitData.py -h
-usage: SplitData.py [-h] -i PATH -o PATH [-s1 INT] [-s2 INT] [-t INT] [-sn INT,...] [-prop FLOAT]
+usage: SplitData.py [-h] -i PATH -o PATH [-s1 INT] [-s2 INT] [-prop FLOAT]
 
 Save data for data spliting
 
@@ -153,19 +153,17 @@ optional arguments:
   -o PATH      Output directory
   -s1 INT      Seed for numpy (default: 86)
   -s2 INT      Seed for torch (default: 86)
-  -t INT       Number of task per step (default: 2)
-  -sn INT,...  Dataset index for test, seperated by ",", will override -s1 and -t
   -prop FLOAT  Proportion of nodes to sample (default: 0.75)
 ```
 Then proceed with fine‑tuning
 ```
-python MlFunetune.py -i split_dir -o output_dir
+python MlFunetune.py -i SplitDir -o OutputDir -m MAMLDir/MAML_best_model.pth
 ```
-For more information about  fune-tuning, run
+For more information about fune-tuning, run
 ```
 > python MlFunetune.py -h
-usage: a.py [-h] -ip PATH -o PATH [-i1 STR] [-i2 STR] [-si INT] [-sd INT] [-s2 INT] [-ss INT,INT,INT,INT]
-            [-a INT] [-ep INT] [-prop FLOAT] [-sr FLOAT] [-gr FLOAT] [-er FLOAT] [-m FILE] [-mt INT] [-iep INT]
+usage: a.py [-h] -ip PATH -o PATH [-i1 STR] [-si INT] [-sd INT] [-s2 INT] [-ss INT,INT,INT,INT] [-a INT]
+            [-ep INT] [-prop FLOAT] [-sr FLOAT] [-gr FLOAT] [-er FLOAT] [-m FILE] [-mt INT] [-iep INT]
             [-lr FLOAT] [-g INT] [-p INT]
 
 MAML fine-tuning for link prediction
@@ -174,8 +172,7 @@ optional arguments:
   -h, --help           show this help message and exit
   -ip PATH             Input directory
   -o PATH              Output directory
-  -i1 STR              Input file prefix1
-  -i2 STR              Input file prefix2
+  -i1 STR              Input file prefix
   -si INT              Small index (default: 2)
   -sd INT              Small dimension (default: 756)
   -s2 INT              Seed for torch (default: 86)
@@ -192,4 +189,8 @@ optional arguments:
   -lr FLOAT            Learning rate (default: 0.0001)
   -g INT               Gamma for focal loss (default: 4)
   -p INT               Number of patience (default: 50)
+```
+If you would like to use a trained model, say Escherichia, you can run:
+```
+python MlFunetune.py -i SplitDir -i1 Escherichia -o OutputDir -m MAMLDir/Escherichia_best_model.pth
 ```

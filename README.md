@@ -9,6 +9,8 @@ The main model is built under `torch-geometric`:
 conda create -n phagemind -c pytorch -c conda-forge pytorch torchvision torchaudio 
 # OR if a GPU is available, check its CUDA version and install the corresponding pytorch‑cuda package
 conda create -n phagemind -c pytorch -c conda-forge -c nvidia pytorch torchvision torchaudio pytorch-cuda=xx.x
+# For example, if CUDA version is 12.1, then pytorch-cuda=12.1
+conda create -n phagemind -c pytorch -c conda-forge -c nvidia pytorch torchvision torchaudio pytorch-cuda=12.1
 ```
 For feature generation and input processing, please also run below:
 ```
@@ -25,5 +27,7 @@ conda activate phagemind
 ```
 ## Usage
 For detailed instruction, refer to `code/STEPS.md`.
+
+For dataset, refer to `data/DATA.md`.
 ## References
 The arXiv version can be found via: [arXiv version](https://arxiv.org/abs/2601.15886)
