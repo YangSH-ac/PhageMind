@@ -6,4 +6,4 @@ This dataset was obtained from paper [Boeckaerts, D. et al., 2024](https://doi.o
 ## Vibrio and Alteromonas
 Data available on NCBI are recorded in `NCBI.tsv`.
 
-The rest data is available through [GoogleDrive](https://drive.google.com/file/d/1TdhiWlZbGM9HTwdXNjgsI_SdwIRqk2Nh/view) or [BaiduNetDisk].
+The rest data is available through [GoogleDrive](https://drive.google.com/file/d/1ioT8fyRzSMNkA49nruvDkmcNDWcNu7hw).

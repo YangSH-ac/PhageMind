@@ -1,4 +1,5 @@
 # STEPS for model
+It's better to unpack the data file and move them all into `code` directory for convenience when running examples below.
 ## 1. Input processing
 ### Bacteria
 For bacterial genomes, we recommend to use [RAST](https://rast.nmpdr.org/) for protein translation and annotation.
@@ -46,7 +47,7 @@ After obtaining the annotated protein sequences and the corresponding DNA sequen
 
 If necessary, you can further use [AlphaFold2](https://github.com/google-deepmind/alphafold) for structural prediction and then manually determine which proteins are RBPs for extraction.
 ## 2. Feature generation
-Once the continuous O‑antigen biosynthesis gene clusters of all bacteria and the RBPs of phages (including both protein and DNA sequences) have been obtained, feature extraction can be performed. 
+Once the continuous O‑antigen biosynthesis gene clusters of bacteria and the RBPs of phages (including both protein and DNA sequences) have been obtained, feature extraction can be performed. 
 ```
 # For single bacterial strain
 python FeatureGenerate.py -d Escherichia/bacteria/proc/DNA/BE.fasta -p Escherichia/bacteria/proc/protein/BE.fasta \
@@ -58,7 +59,7 @@ python FeatureGenerate.py -d Escherichia/phages/proc/DNA/T4LD.fasta -p Escherich
 For more information about this script, run
 ```
 > python FeatureGenerate.py -h
-usage: FeatureGenerate.py [-h] -d FILE -p FILE -o FILE -l FILE [-s STR,..] [-v] [-rl] [-rd]
+usage: FeatureGenerate.py [-h] -d FILE -p FILE -o FILE [-l FILE] [-s STR,..] [-v] [-rl] [-rd]
 
 Integrated Genomic Feature From DNA and Protein Sequences
 
@@ -157,11 +158,11 @@ optional arguments:
 ```
 Then proceed with fine‑tuning
 ```
-python MlFunetune.py -i SplitDir -o OutputDir -m MAMLDir/MAML_best_model.pth
+python MlFunetun.py -i SplitDir -o OutputDir -m MAMLDir/MAML_best_model.pth
 ```
 For more information about fune-tuning, run
 ```
-> python MlFunetune.py -h
+> python MlFunetun.py -h
 usage: a.py [-h] -ip PATH -o PATH [-i1 STR] [-si INT] [-sd INT] [-s2 INT] [-ss INT,INT,INT,INT] [-a INT]
             [-ep INT] [-prop FLOAT] [-sr FLOAT] [-gr FLOAT] [-er FLOAT] [-m FILE] [-mt INT] [-iep INT]
             [-lr FLOAT] [-g INT] [-p INT]
@@ -192,5 +193,5 @@ optional arguments:
 ```
 If you would like to use a trained model, say Escherichia, you can run:
 ```
-python MlFunetune.py -i SplitDir -i1 Escherichia -o OutputDir -m MAMLDir/Escherichia_best_model.pth
+python MlFunetun.py -i SplitDir -i1 Escherichia -o OutputDir -m MAMLDir/Escherichia_best_model.pth
 ```
