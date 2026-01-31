@@ -116,7 +116,7 @@ def split_sample(bacteria, phage, edge_index, edge_labels, train_ratio=0.7):
             "valid_global_ids": {"bact": bac_valid, "phage": phage_valid},
             "test_global_ids": {"bact": bac_test, "phage": phage_test}}
     return build_train_graph(), build_global_graph()
-def prepare_task_data(group, args, mode="train", device='cpu'):
+def prepare_task_data(group, args, device='cpu'):
     import torch
     from torch_geometric.data import Data
     def pad_dim(small_tensor, total_dim=220, fill_value=-999):
@@ -136,10 +136,10 @@ def prepare_task_data(group, args, mode="train", device='cpu'):
         small_idx = 1
         small_dim = data.x1.shape[1]
         data.x1 = pad_dim(data.x1, data.x2.shape[1])
-    prop = args.prop if mode == 'train' else 0.5
+    prop = args.prop
     n_bacteria = max(int(data.x1.size(0) * prop), 1)
     n_phage = max(int(data.x2.size(0) * prop), 1)
-    _printdw(f"{mode.capitalize()},  Genus: {group['wildcard']}, Sampled Bacteria: {n_bacteria}, Sampled Phage: {n_phage}")
+    _printdw(f"Genus: {group['wildcard']}, Sampled Bacteria: {n_bacteria}, Sampled Phage: {n_phage}")
     train_graph, other_graph = split_sample(data.x1, data.x2, data.index, data.label, train_ratio=prop)
     pos_edges = train_graph['edge_index'][train_graph['all_labels'] == 1,:]
     x = train_graph['node_features']

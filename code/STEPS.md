@@ -163,8 +163,8 @@ python MlFunetun.py -i SplitDir -o OutputDir -m MAMLDir/MAML_best_model.pth
 For more information about fune-tuning, run
 ```
 > python MlFunetun.py -h
-usage: MlFunetun.py [-h] -ip PATH -o PATH [-i1 STR] [-si INT] [-sd INT] [-s2 INT] [-ss INT,INT,INT,INT]
-            [-a INT] [-ep INT] [-prop FLOAT] [-sr FLOAT] [-gr FLOAT] [-er FLOAT] [-m FILE] [-mt INT] [-iep INT]
+usage: MlFunetun.py [-h] -ip PATH -o PATH [-i1 STR] [-si INT] [-sd INT] [-s2 INT] [-ss INT,INT,INT,INT] [-a INT]
+            [-ep INT] [-prop FLOAT] [-sr FLOAT] [-gr FLOAT] [-er FLOAT] [-m FILE] [-mt INT] [-iep INT]
             [-lr FLOAT] [-g INT] [-p INT]
 
 MAML fine-tuning for link prediction

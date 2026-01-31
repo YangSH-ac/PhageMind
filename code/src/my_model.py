@@ -1,5 +1,5 @@
 import torch
-from torch.nn import Linear, LayerNorm, Sequential, ReLU
+from torch.nn import Linear, Sequential, ReLU
 import torch.nn.functional as F
 from torch_geometric.nn import GCNConv
 class GCNLinkPredictShare(torch.nn.Module):
