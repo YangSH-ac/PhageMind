@@ -22,8 +22,9 @@ def main():
             except Exception:
                 continue  # skip non-numeric
             new_val = 1 if num > 0 else 0
-            rows.append([bact, phage, num, new_val, i, j])
+            rows.append([bact, phage, new_val, new_val, i, j])
     out_df = pd.DataFrame(rows, columns=["Bacteria", "Phage", "OriginalValue", "BinaryValue", "BacteriaIndex", "PhageIndex"])
     out_df.to_csv(args.output, index=False, header=False)
 if __name__ == "__main__":
+
     main()
