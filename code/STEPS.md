@@ -56,6 +56,8 @@ python FeatureGenerate.py -d Escherichia/bacteria/proc/DNA/BE.fasta -p Escherich
 python FeatureGenerate.py -d Escherichia/phages/proc/DNA/T4LD.fasta -p Escherichia/phages/proc/protein/T4LD.fasta \
                           -o InputDir/phageEscherichia.csv -s mean,min,max
 ```
+To collect features from all bacterial or phage sequence pairs into a single CSV for downstream use, run the per‑sample command repeatedly but write into the same output file. Or using `for` loop for processing recursively.
+
 For more information about this script, run
 ```
 > python FeatureGenerate.py -h
