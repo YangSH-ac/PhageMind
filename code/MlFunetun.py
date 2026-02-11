@@ -92,15 +92,16 @@ def load_single_dataset(path, prefix1, small_idx=2, small_dim=728):
             printd(f"File not exist - {fea_path} or {edge_path}", types=1)
             return None
         data_all[types] = load_csv_data(fea_path, edge_path)
+    x_all = torch.cat([data_all['train'].x, data_all['valid'].x, data_all['test'].x], dim=0)
     pos_edges = data_all['train'].index[data_all['train'].label == 1, :]
     x_type_train = generate_mask(data_all['train'].x, small_dim)
-    x_type_all = generate_mask(data_all['test'].x, small_dim)
+    x_type_all = generate_mask(x_all, small_dim)
     data_train = Data(x=data_all['train'].x, edge_index=pos_edges, small_idx=small_idx, types=x_type_train,
-                      edge_label=data_all['train'].index, true_label=data_all['train'].label, dataset_id=0, dataset_name=f"{prefix1}")
-    data_valid = Data(x=data_all['test'].x, edge_index=pos_edges, small_idx=small_idx, types=x_type_all, 
-                      edge_label=data_all['valid'].index, true_label=data_all['valid'].label, dataset_id=0, dataset_name=f"{prefix1}")
-    data_test = Data(x=data_all['test'].x, edge_index=pos_edges, small_idx=small_idx, types=x_type_all, 
-                     edge_label=data_all['test'].index, true_label=data_all['test'].label, dataset_id=0, dataset_name=f"{prefix1}")
+                      edge_label=data_all['train'].index, true_label=data_all['train'].label, dataset_id=0, dataset_name=f"{prefix1}_{prefix2}")
+    data_valid = Data(x=x_all, edge_index=pos_edges, small_idx=small_idx, types=x_type_all, 
+                      edge_label=data_all['valid'].index, true_label=data_all['valid'].label, dataset_id=0, dataset_name=f"{prefix1}_{prefix2}")
+    data_test = Data(x=x_all, edge_index=pos_edges, small_idx=small_idx, types=x_type_all, 
+                     edge_label=data_all['test'].index, true_label=data_all['test'].label, dataset_id=0, dataset_name=f"{prefix1}_{prefix2}")
     return {'train': data_train,'valid': data_valid,'test': data_test,'num_nodes_train': data_all['train'].x.shape[0],'num_nodes_all': data_all['test'].x.shape[0], 'dataset_name': f"{prefix1}"}
 def find_all_datasets(path):
     feature_files = glob.glob(os.path.join(path, "*features.csv"))
@@ -312,3 +313,4 @@ if __name__ == "__main__":
     results_df = pd.DataFrame(all_results)
     results_df.to_csv(os.path.join(args.o, 'all_datasets_summary.csv'), index=False)
     printd(f"All results saved to {args.o} and {os.path.join(args.o, 'all_datasets_summary.csv')}")
+
