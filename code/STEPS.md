@@ -43,9 +43,9 @@ If these sequences are in contig form, it is possible that housekeeping genes ma
 ### Phages
 For phage genomes, we recommend to use [pharokka](https://github.com/gbouras13/pharokka) for protein translation and annotation.
 
-After obtaining the annotated protein sequences and the corresponding DNA sequences, you can manually search for RBP proteins annotated as *tail fiber/fibre*, *fiber/fibre tail*, *tail spike*, or *receptor binding* and extract them. 
+After obtaining the annotated protein sequences and the corresponding DNA sequences, you can manually search for RBP proteins annotated as *tail fiber/fibre*, *fiber/fibre tail*, *tail spike*, or *receptor binding* and extract them. This step can also be done by using [SeekRBP](https://github.com/Saillxl/SeekRBP).
 
-If necessary, you can further use [AlphaFold2](https://github.com/google-deepmind/alphafold) for structural prediction and then manually determine which proteins are RBPs for extraction.
+If necessary, you can further use [AlphaFold](https://github.com/google-deepmind/alphafold) for structural prediction and then manually determine which proteins are RBPs for extraction.
 ## 2. Feature generation
 Once the continuous O‑antigen biosynthesis gene clusters of bacteria and the RBPs of phages (including both protein and DNA sequences) have been obtained, feature extraction can be performed. 
 ```
