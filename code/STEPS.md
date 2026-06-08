@@ -1,9 +1,9 @@
 # STEPS for model
 It's better to unpack the data file and move them all into `data` directory for convenience when running examples below.
-## 1. Input processing
-### Bacteria
+# 1. Input processing
+## 1.1 Bacteria
 For bacterial genomes, we recommend to use [RAST](https://rast.nmpdr.org/) for protein translation and annotation.
-
+### 1.1.1 Single version (for preliminary exploration)
 After obtaining the annotated protein sequences and the corresponding DNA sequences, the continuous O‑antigen biosynthesis gene cluster can be identified based on the housekeeping genes listed in `HousekeepingGenes.tsv`. For example, in Escherichia, for single bacterial strain
 ```
 # For protein sequence
@@ -15,7 +15,8 @@ python FastaExtract.py -i ../data/Escherichia/bacteria/RAST/DNA/BE.fasta -o ../d
                        -s "UTP--glucose-1-phosphate uridylyltransferase" \
                        -e "6-phosphogluconate dehydrogenase"
 ```
-For more information about this script, run
+If these sequences are in contig form, it is possible that housekeeping genes may be distributed across multiple contigs. To achieve more accurate retrieval, the contigs can be assembled using [RagTag](https://github.com/malonge/RagTag) prior to extraction.
+- For more information about this script, run
 ```
 > python FastaExtract.py -h
 usage: FastaExtract.py [-h] -i FILE -o FILE [-a] [-s STR] [-e STR] [-k] [-l FILE] [-r]
@@ -39,14 +40,89 @@ List extraction:
   -l FILE, --list FILE  Pattern list file
   -r, --reverse         Exclude list patterns
 ```
-If these sequences are in contig form, it is possible that housekeeping genes may be distributed across multiple contigs. To achieve more accurate retrieval, the contigs can be assembled using [RagTag](https://github.com/malonge/RagTag) prior to extraction.
-### Phages
+
+### 1.1.2 Advanced version
+After obtaining the annotated protein sequences and the corresponding DNA sequences, the continuous O‑antigen biosynthesis gene cluster can be identified based on the housekeeping genes listed in `HousekeepingGenes.tsv` and clustering with database (`OantiDatabase`) by [MMseqs2](https://github.com/soedinglab/mmseqs2). Please install [MMseqs2](https://github.com/soedinglab/mmseqs2) before running the following scripts.
+
+First, run `MMseqs2Cluster.sh` to cluster input fasta sequences against a database fasta, outputting a TSV of clustered input sequence IDs. Then, run `HousekeepCluster.py` to analyze the distribution of clusters and housekeeping genes on contigs, and extract candidate regions based on defined priority rules. For example, in Escherichia, for single bacterial strain
+```
+# Using different database fasta will get different results
+bash MMseqs2Cluster.sh -i ../data/Escherichia/bacteria/RAST/protein/BE.fasta -d ../data/OantiDatabase/Escherichia.faa \ 
+                       -o ../data/Escherichia/bacteria/OantiProc/BE
+# To combine the clustering results with housekeeping genes info.
+cat ../data/Escherichia/bacteria/OantiProc/BE/BE_cluster.tsv ../data/HousekeepingGenes.tsv > ../data/Escherichia/bacteria/OantiProc/BE/gene.tsv
+python HousekeepCluster.py -i ../data/Escherichia/bacteria/RAST/protein/BE.fasta -t ../data/Escherichia/bacteria/OantiProc/BE/gene.tsv \
+                           -o ../data/Escherichia/bacteria/OantiProc/BE/prot -s ../data/Escherichia/bacteria/OantiProc/BE/proteins_dist.tsv
+python HousekeepCluster.py -i ../data/Escherichia/bacteria/RAST/dna/BE.fasta -t ../data/Escherichia/bacteria/OantiProc/BE/gene.tsv \
+                           -o ../data/Escherichia/bacteria/OantiProc/BE/dna -s ../data/Escherichia/bacteria/OantiProc/BE/dna_dist.tsv
+```
+After running above, more details can be checked in `prot/BE.log`, `dna/BE.log`, `proteins_dist.tsv`, `dna_dist.tsv` under `../data/Escherichia/bacteria/OantiProc/BE`. Then select or re-check the output FASTA file under sub-directory `dna`, `prot` and copy or move to `../data/Escherichia/bacteria/proc/protein` and `../data/Escherichia/bacteria/proc/DNA` for downstream processing.
+- For more information about these scripts, run
+```
+> bash MMseqs2Cluster.sh -h
+usage: MMseqs2Cluster.sh -i input -d database -o outdir [-m mmseqs][-p prefix][-c options][-q][-r][-h]
+
+ Run MMseqs2 to cluster input fasta sequences against a database fasta, outputting a TSV of clustered input sequence IDs.
+ Output TSV (saved to <outdir>/<input>_cluster.tsv) format: "cluster    input_sequence_id" and can be used for downstream analysis.
+ Log file is saved to <outdir>/mmseqs_cluster_database.log. MMseqs2 log is saved to <outdir>/mmseqs_running.log.
+
+ Options:
+  -i  REQUIRED, Input fasta file
+  -d  REQUIRED, Database fasta file, considered as reference sequences for clustering
+  -o  REQUIRED, Output directory
+  -m  Path to mmseqs2 executable (default: mmseqs)
+  -p  Database annotation prefix (default: COLLECTED_O_ANTIGEN_CLUSTER_DATABASE)
+  -c  Extra options for mmseqs cluster (e.g. "--min-seq-id 0.9 --cov-mode 1 -c 0.8")
+  -q  Database already has prefix in headers, skip adding prefix
+  -r  Remove mmseqs intermediate files, keep only TSV and final list
+  -h  Show this help message and exit
+```
+```
+> python HousekeepCluster.py -h
+usage: HousekeepCluster.py [-h] -i FILE -t FILE -o PATH [-g INT] [-s FILE] [-r] [-l FILE]
+
+Analyze the distribution of clusters and housekeeping genes on contigs, and extract candidate regions based on defined priority rules.
+The script takes a protein FASTA file and a TSV file that defines cluster IDs and housekeeping gene annotations, then identifies potential cluster
+regions while considering the presence of housekeeping genes as boundaries.
+
+The priority rules are:
+`P1`: There are multiple different housekeeping genes close to each other in one contig. The candidate region is defined as the segment between
+two different housekeeping genes. The gap is the total count of cluster genes in that segment. Candidates with gap > 4 and <= threshold are
+considered high confidence, while those with gap <= 3x threshold are considered relaxed.
+`P2`: There are housekeeping genes close to an end of single contig and there are multiple housekeeping genes globally. The candidate region
+is defined as the combination of segments on either side of the single housekeeping gene across different contigs. The gap is the total count
+of cluster genes in the combined segments. Candidates with gap > 4 and <= threshold are considered high confidence, while those with
+gap <= 3x threshold are considered relaxed.
+`P3`: The housekeeping genes are far from each other or there is only one housekeeping gene globally. The candidate region is defined as the
+segment on either side of the single housekeeping gene on the same contig. The gap is the count of cluster genes in that segment. Candidates
+with gap > 4 and cluster_count/gap > 0.5 are considered high confidence.
+`P4`: Housekeeping genes cannot be found. The candidate region is defined as the segment around the maximum positive count (cluster gene) on
+the contig, extended in both directions as long as the gap does not exceed the threshold. Candidates with gap > 4 and cluster_count/gap > 0.5
+are considered high confidence, while those that do not meet this ratio but have gap > 4 are considered relaxed.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i FILE, --input FILE
+                        Input protein FASTA file
+  -t FILE, --tsv FILE   Cluster/housekeeping gene TSV file (first column 'cluster' means mmseqs cluster result, otherwise housekeeping gene
+                        abbreviation)
+  -o PATH, --outdir PATH
+                        Output directory
+  -g INT, --gap INT     Max protein count threshold (default 25)
+  -s FILE, --tsvout FILE
+                        Output TSV file containing gene distribution by housekeeping (abbreviations), clustering (positive counts) and others (negative
+                        counts) (optional)
+  -r, --relax           Allow `P1` `P2` relaxed candidates with gap up to 3x threshold (`P4` will always output relaxed candidates)
+  -l FILE, --log FILE   Log file (default <outdir>/<input>.log)
+```
+
+## 1.2 Phages
 For phage genomes, we recommend to use [pharokka](https://github.com/gbouras13/pharokka) for protein translation and annotation.
 
 After obtaining the annotated protein sequences and the corresponding DNA sequences, you can manually search for RBP proteins annotated as *tail fiber/fibre*, *fiber/fibre tail*, *tail spike*, or *receptor binding* and extract them. This step can also be done by using [SeekRBP](https://github.com/Saillxl/SeekRBP).
 
 If necessary, you can further use [AlphaFold](https://github.com/google-deepmind/alphafold) for structural prediction and then manually determine which proteins are RBPs for extraction.
-## 2. Feature generation
+# 2. Feature generation
 Once the continuous O‑antigen biosynthesis gene clusters of bacteria and the RBPs of phages (including both protein and DNA sequences) have been obtained, feature extraction can be performed. 
 ```
 # For single bacterial strain
@@ -58,7 +134,7 @@ python FeatureGenerate.py -d ../data/Escherichia/phages/proc/DNA/T4LD.fasta -p .
 ```
 To collect features from all bacterial or phage sequence pairs into a single CSV for downstream use, run the per‑sample command repeatedly but write into the same output file. Or using `for` loop for processing recursively.
 
-For more information about this script, run
+- For more information about this script, run
 ```
 > python FeatureGenerate.py -h
 usage: FeatureGenerate.py [-h] -d FILE -p FILE -o FILE [-l FILE] [-s STR,..] [-v] [-rl] [-rd]
@@ -81,12 +157,12 @@ optional arguments:
                         Remove collinear features
   -rd, --remove-codon   Disable codon features
 ```
-### Interaction files
+## 2.1 Interaction files
 To ensure the correctness of the interactions, please make sure that the order of bacteria/phages in the generated feature file matches the order in the interaction file. For the interaction file, convert the TSV file into the required format (for CSV files, use the -c option)
 ```
 python FormatFile.py -i ../data/Escherichia/interaction/Interaction.tsv -o ../data/InputDir/edgeEscherichia.csv
 ```
-For more information about this script, run
+- For more information about this script, run
 ```
 > python FormatFile.py -h
 usage: FormatFile.py [-h] -i INPUT -o OUTPUT [-c] [-r]
@@ -102,12 +178,12 @@ optional arguments:
   -c, --csv             Input file is CSV instead of TSV
   -r, --reverse         Interpret columns as bacteria and rows as phages
 ```
-## 3. Meta-learning
+# 3. Meta-learning
 Once feature generation is complete, place all input files into a single directory (e.g., `InputDir`). Each dataset should contain three files, such as `bactEscherichia.csv`, `phageEscherichia.csv`, and `edgeEscherichia.csv`. Then run the MAML training process to obtain the Meta-learning model.
 ```
 python MAML.py -i ../data/InputDir -o ../data/MAMLDir
 ```
-For more information about MAML settings, run
+- For more information about MAML settings, run
 ```
 > python MAML.py -h
 usage: MAML.py [-h] -i PATH -o PATH [-s1 INT] [-t INT] [-sn INT,...] [-s2 INT] [-ss INT,INT,INT,INT] [-a INT]
@@ -138,12 +214,20 @@ optional arguments:
   -g INT               Gamma for focal loss (default: 4)
   -p INT               Number of patience (default: 50)
 ```
-## 4. Fune-tuning
+# 4. Fune-tuning
 After completing MAML meta‑learning and obtaining the meta‑learned model, fine‑tuning on individual datasets is required. The first step is to split the dataset.
 ```
 python SplitData.py -i ../data/InputDir -o ../data/SplitDir
 ```
-For more information about data spliting, run
+Then proceed with fine‑tuning
+```
+python MlFunetun.py -i ../data/SplitDir -o ../data/OutputDir -m ../data/MAMLDir/MAML_best_model.pth
+```
+If you would like to use a trained model, say Escherichia, you can run:
+```
+python MlFunetun.py -i ../data/SplitDir -i1 Escherichia -o ../data/OutputDir -m ../data/MAMLDir/Escherichia_best_model.pth
+```
+- For more information, run
 ```
 > python SplitData.py -h
 usage: SplitData.py [-h] -i PATH -o PATH [-s1 INT] [-s2 INT] [-prop FLOAT]
@@ -158,11 +242,6 @@ optional arguments:
   -s2 INT      Seed for torch (default: 86)
   -prop FLOAT  Proportion of nodes to sample (default: 0.75)
 ```
-Then proceed with fine‑tuning
-```
-python MlFunetun.py -i ../data/SplitDir -o ../data/OutputDir -m ../data/MAMLDir/MAML_best_model.pth
-```
-For more information about fune-tuning, run
 ```
 > python MlFunetun.py -h
 usage: MlFunetun.py [-h] -ip PATH -o PATH [-i1 STR] [-si INT] [-sd INT] [-s2 INT] [-ss INT,INT,INT,INT] [-a INT]
@@ -193,7 +272,4 @@ optional arguments:
   -g INT               Gamma for focal loss (default: 4)
   -p INT               Number of patience (default: 50)
 ```
-If you would like to use a trained model, say Escherichia, you can run:
-```
-python MlFunetun.py -i ../data/SplitDir -i1 Escherichia -o ../data/OutputDir -m ../data/MAMLDir/Escherichia_best_model.pth
-```
+
