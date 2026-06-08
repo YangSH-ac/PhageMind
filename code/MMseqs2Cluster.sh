@@ -51,7 +51,7 @@ cat "$input" "$dbfile" > "$tmpfile"
 
 mmseqs_log="$outdir/mmseqs_running.log"
 echo "INFO: Combined input and database into $tmpfile, starting MMseqs2 clustering. MMseqs2 log saved to $mmseqs_log"
-$mmseqs createdb "$tmpfile" "$mmseqsdir/db" &> "$mmseqs_log" &> "$mmseqs_log"
+$mmseqs createdb "$tmpfile" "$mmseqsdir/db" &> "$mmseqs_log"
 $mmseqs cluster "$mmseqsdir/db" "$mmseqsdir/clu" "$mmseqsdir/pref" --threads 1 $options &> "$mmseqs_log"
 tsvfile="$mmseqsdir/${inname}_cluster.tsv" &> "$mmseqs_log"
 $mmseqs createtsv "$mmseqsdir/db" "$mmseqsdir/db" "$mmseqsdir/clu" "$tsvfile" &> "$mmseqs_log"
