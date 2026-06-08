@@ -48,8 +48,8 @@ P15	vB_ValS_R23Z	MT442039.1	"https://doi.org/10.1016/j.fsi.2025.110506."
 P16	vB_ValM_R10Z	MT612988.1	
 P63	vB_ValM_R11Z	MT612989.1	
 P64	vB_ValM_R13Z	PX512290.1	
-P72	vB_ValS_R12Z	PP094284.1	"Keming Shi, Huiyu Ding, Wanxuan Zhong, Wenqing Li, Min Hsiao, Bu Xu, Haipeng Guo, Jing Zhao, Jie Xu, Demin Zhang, Yunlan Yang, Rui Zhang, A broad-spectrum vibriophage with potential for phage therapy against Vibrio alginolyticus in shrimp aquaculture, Aquaculture, Volume 612, Part 2, 2026, 743215, ISSN 0044-8486, https://doi.org/10.1016/j.aquaculture.2025.743215."
+P72	vB_ValS_R12Z	PP094284.1	"https://doi.org/10.1016/j.aquaculture.2025.743215."
 P74	vB_ValA_R15Z	OQ745668.1	
-phiST	vB_VpaP_R28Z	PQ289634.1	"Zhong, H., Huang, W., Lin, K.T. et al. A virulent phage vB_VpaP_R28Z infecting Vibrio parahaemolyticus with potential for therapeutic application. BMC Microbiol 25, 433 (2025). https://doi.org/10.1186/s12866-025-04133-x"
-vB_VpaM_R16F_C1_2	vB_VpaM_R16F	OP793884.1	"Chen, Y., Li, W., Shi, K. et al. Isolation and characterization of a novel phage belonging to a new genus against Vibrio parahaemolyticus. Virol J 20, 81 (2023). https://doi.org/10.1186/s12985-023-02036-9"
+phiST	vB_VpaP_R28Z	PQ289634.1	"https://doi.org/10.1186/s12866-025-04133-x"
+vB_VpaM_R16F_C1_2	vB_VpaM_R16F	OP793884.1	"https://doi.org/10.1186/s12985-023-02036-9"
 vB_VpaM_R20L_6	vB_VpaM_R20L	PP839372.1	
