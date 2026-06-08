@@ -1,5 +1,5 @@
 # STEPS for model
-It's better to unpack the data file and move them all into `code` directory for convenience when running examples below.
+It's better to unpack the data file and move them all into `data` directory for convenience when running examples below.
 ## 1. Input processing
 ### Bacteria
 For bacterial genomes, we recommend to use [RAST](https://rast.nmpdr.org/) for protein translation and annotation.
@@ -7,11 +7,11 @@ For bacterial genomes, we recommend to use [RAST](https://rast.nmpdr.org/) for p
 After obtaining the annotated protein sequences and the corresponding DNA sequences, the continuous O‑antigen biosynthesis gene cluster can be identified based on the housekeeping genes listed in `HousekeepingGenes.tsv`. For example, in Escherichia, for single bacterial strain
 ```
 # For protein sequence
-python FastaExtract.py -i Escherichia/bacteria/RAST/protein/BE.fasta -o Escherichia/bacteria/proc/protein/BE.fasta \
+python FastaExtract.py -i ../data/Escherichia/bacteria/RAST/protein/BE.fasta -o ../data/Escherichia/bacteria/proc/protein/BE.fasta \
                        -s "UTP--glucose-1-phosphate uridylyltransferase" \
                        -e "6-phosphogluconate dehydrogenase" 
 # Corresponding For DNA sequence
-python FastaExtract.py -i Escherichia/bacteria/RAST/DNA/BE.fasta -o Escherichia/bacteria/proc/DNA/BE.fasta \
+python FastaExtract.py -i ../data/Escherichia/bacteria/RAST/DNA/BE.fasta -o ../data/Escherichia/bacteria/proc/DNA/BE.fasta \
                        -s "UTP--glucose-1-phosphate uridylyltransferase" \
                        -e "6-phosphogluconate dehydrogenase"
 ```
@@ -50,10 +50,10 @@ If necessary, you can further use [AlphaFold](https://github.com/google-deepmind
 Once the continuous O‑antigen biosynthesis gene clusters of bacteria and the RBPs of phages (including both protein and DNA sequences) have been obtained, feature extraction can be performed. 
 ```
 # For single bacterial strain
-python FeatureGenerate.py -d Escherichia/bacteria/proc/DNA/BE.fasta -p Escherichia/bacteria/proc/protein/BE.fasta \
+python FeatureGenerate.py -d ../data/Escherichia/bacteria/proc/DNA/BE.fasta -p ../data/Escherichia/bacteria/proc/protein/BE.fasta \
                           -o InputDir/bactEscherichia.csv -s mean,std,min,q25,median,q75,max
 # For single phage
-python FeatureGenerate.py -d Escherichia/phages/proc/DNA/T4LD.fasta -p Escherichia/phages/proc/protein/T4LD.fasta \
+python FeatureGenerate.py -d ../data/Escherichia/phages/proc/DNA/T4LD.fasta -p ../data/Escherichia/phages/proc/protein/T4LD.fasta \
                           -o InputDir/phageEscherichia.csv -s mean,min,max
 ```
 To collect features from all bacterial or phage sequence pairs into a single CSV for downstream use, run the per‑sample command repeatedly but write into the same output file. Or using `for` loop for processing recursively.
@@ -84,7 +84,7 @@ optional arguments:
 ### Interaction files
 To ensure the correctness of the interactions, please make sure that the order of bacteria/phages in the generated feature file matches the order in the interaction file. For the interaction file, convert the TSV file into the required format (for CSV files, use the -c option)
 ```
-python FormatFile.py -i Escherichia/interaction/Interaction.tsv -o InputDir/edgeEscherichia.csv
+python FormatFile.py -i ../data/Escherichia/interaction/Interaction.tsv -o ../data/InputDir/edgeEscherichia.csv
 ```
 For more information about this script, run
 ```
@@ -105,7 +105,7 @@ optional arguments:
 ## 3. Meta-learning
 Once feature generation is complete, place all input files into a single directory (e.g., `InputDir`). Each dataset should contain three files, such as `bactEscherichia.csv`, `phageEscherichia.csv`, and `edgeEscherichia.csv`. Then run the MAML training process to obtain the Meta-learning model.
 ```
-python MAML.py -i InputDir -o MAMLDir
+python MAML.py -i ../data/InputDir -o ../data/MAMLDir
 ```
 For more information about MAML settings, run
 ```
@@ -141,7 +141,7 @@ optional arguments:
 ## 4. Fune-tuning
 After completing MAML meta‑learning and obtaining the meta‑learned model, fine‑tuning on individual datasets is required. The first step is to split the dataset.
 ```
-python SplitData.py -i InputDir -o SplitDir
+python SplitData.py -i ../data/InputDir -o ../data/SplitDir
 ```
 For more information about data spliting, run
 ```
@@ -160,7 +160,7 @@ optional arguments:
 ```
 Then proceed with fine‑tuning
 ```
-python MlFunetun.py -i SplitDir -o OutputDir -m MAMLDir/MAML_best_model.pth
+python MlFunetun.py -i ../data/SplitDir -o ../data/OutputDir -m ../data/MAMLDir/MAML_best_model.pth
 ```
 For more information about fune-tuning, run
 ```
@@ -195,5 +195,5 @@ optional arguments:
 ```
 If you would like to use a trained model, say Escherichia, you can run:
 ```
-python MlFunetun.py -i SplitDir -i1 Escherichia -o OutputDir -m MAMLDir/Escherichia_best_model.pth
+python MlFunetun.py -i ../data/SplitDir -i1 Escherichia -o ../data/OutputDir -m ../data/MAMLDir/Escherichia_best_model.pth
 ```
