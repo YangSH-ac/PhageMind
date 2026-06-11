@@ -7,7 +7,7 @@ usage() {
 
  Run MMseqs2 to cluster input fasta sequences against a database fasta, outputting a TSV of clustered input sequence IDs. 
  Output TSV (saved to <outdir>/<input>_cluster.tsv) format: "cluster	input_sequence_id" and can be used for downstream analysis.
- Log file is saved to <outdir>/mmseqs_cluster_database.log. MMseqs2 log is saved to <outdir>/mmseqs_running.log.
+ Log file is saved to <outdir>/mmseqs2cluster.log. MMseqs2 log is saved to <outdir>/mmseqs_running.log.
  
  Options:
   -i  REQUIRED, Input fasta file
