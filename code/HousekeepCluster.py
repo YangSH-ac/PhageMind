@@ -1,4 +1,3 @@
-#!/home/yshen86/python
 import argparse, os, logging
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="Analyze the distribution of clusters and housekeeping genes on contigs, and extract candidate regions based on defined priority rules." \
