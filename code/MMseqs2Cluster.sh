@@ -38,7 +38,7 @@ done
 
 mmseqsdir="$outdir/mmseqs"
 mkdir -p "$mmseqsdir"
-log="$outdir/mmseqs_cluster_database.log"
+log="$outdir/mmseqs2cluster.log"
 exec > >(while IFS= read -r line; do echo "[$(date '+%F %T')]$line" | tee -a "$log"; done) 2>&1
 echo "INFO: Starting MMseqs2 clustering for $input against $database with prefix $prefix${options:+and options $options}."
 echo "INFO: Output directory: $outdir, Log: $log, MMseqs: $mmseqs."
