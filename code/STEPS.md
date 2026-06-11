@@ -44,13 +44,19 @@ List extraction:
 ### 1.1.2 Advanced version
 After obtaining the annotated protein sequences and the corresponding DNA sequences, the continuous O‑antigen biosynthesis gene cluster can be identified based on the housekeeping genes listed in `HousekeepingGenes.tsv` and clustering with database (`OantiDatabase`) by [MMseqs2](https://github.com/soedinglab/mmseqs2). Please install [MMseqs2](https://github.com/soedinglab/mmseqs2) before running the following scripts.
 
-First, run `MMseqs2Cluster.sh` to cluster input fasta sequences against a database fasta, outputting a TSV of clustered input sequence IDs. Then, run `HousekeepCluster.py` to analyze the distribution of clusters and housekeeping genes on contigs, and extract candidate regions based on defined priority rules. For example, in Escherichia, for single bacterial strain
+First, run `MMseqs2Cluster.sh` to cluster input fasta sequences against a database fasta, outputting a TSV of clustered input sequence IDs.
+
+Then, run `HousekeepCluster.py` to analyze the distribution of clusters and housekeeping genes on contigs, and extract candidate regions based on defined priority rules (see below for details). For example, in Escherichia, for single bacterial strain
 ```
-# Using different database fasta will get different results
+# Different database fasta files will differ the results
 bash MMseqs2Cluster.sh -i ../data/Escherichia/bacteria/RAST/protein/BE.fasta -d ../data/OantiDatabase/Escherichia.faa \ 
                        -o ../data/Escherichia/bacteria/OantiProc/BE
-# To combine the clustering results with housekeeping genes info.
+
+# To combine the clustering results with housekeeping genes info
+# Different housekeeping gene files will differ the results
 cat ../data/Escherichia/bacteria/OantiProc/BE/BE_cluster.tsv ../data/HousekeepingGenes.tsv > ../data/Escherichia/bacteria/OantiProc/BE/gene.tsv
+
+# Different housekeeping gene files will differ the results
 python HousekeepCluster.py -i ../data/Escherichia/bacteria/RAST/protein/BE.fasta -t ../data/Escherichia/bacteria/OantiProc/BE/gene.tsv \
                            -o ../data/Escherichia/bacteria/OantiProc/BE/prot -s ../data/Escherichia/bacteria/OantiProc/BE/proteins_dist.tsv
 python HousekeepCluster.py -i ../data/Escherichia/bacteria/RAST/dna/BE.fasta -t ../data/Escherichia/bacteria/OantiProc/BE/gene.tsv \
@@ -64,7 +70,7 @@ usage: MMseqs2Cluster.sh -i input -d database -o outdir [-m mmseqs][-p prefix][-
 
  Run MMseqs2 to cluster input fasta sequences against a database fasta, outputting a TSV of clustered input sequence IDs.
  Output TSV (saved to <outdir>/<input>_cluster.tsv) format: "cluster    input_sequence_id" and can be used for downstream analysis.
- Log file is saved to <outdir>/mmseqs_cluster_database.log. MMseqs2 log is saved to <outdir>/mmseqs_running.log.
+ Log file is saved to <outdir>/mmseqs2cluster.log. MMseqs2 log is saved to <outdir>/mmseqs_running.log.
 
  Options:
   -i  REQUIRED, Input fasta file
@@ -86,16 +92,20 @@ The script takes a protein FASTA file and a TSV file that defines cluster IDs an
 regions while considering the presence of housekeeping genes as boundaries.
 
 The priority rules are:
+
 `P1`: There are multiple different housekeeping genes close to each other in one contig. The candidate region is defined as the segment between
 two different housekeeping genes. The gap is the total count of cluster genes in that segment. Candidates with gap > 4 and <= threshold are
 considered high confidence, while those with gap <= 3x threshold are considered relaxed.
+
 `P2`: There are housekeeping genes close to an end of single contig and there are multiple housekeeping genes globally. The candidate region
 is defined as the combination of segments on either side of the single housekeeping gene across different contigs. The gap is the total count
 of cluster genes in the combined segments. Candidates with gap > 4 and <= threshold are considered high confidence, while those with
 gap <= 3x threshold are considered relaxed.
+
 `P3`: The housekeeping genes are far from each other or there is only one housekeeping gene globally. The candidate region is defined as the
 segment on either side of the single housekeeping gene on the same contig. The gap is the count of cluster genes in that segment. Candidates
 with gap > 4 and cluster_count/gap > 0.5 are considered high confidence.
+
 `P4`: Housekeeping genes cannot be found. The candidate region is defined as the segment around the maximum positive count (cluster gene) on
 the contig, extended in both directions as long as the gap does not exceed the threshold. Candidates with gap > 4 and cluster_count/gap > 0.5
 are considered high confidence, while those that do not meet this ratio but have gap > 4 are considered relaxed.
