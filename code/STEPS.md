@@ -283,3 +283,4 @@ optional arguments:
   -p INT               Number of patience (default: 50)
 ```
 
+#### Feel free to email me at yshen86@my.cityu.edu.hk should you have any questions.
