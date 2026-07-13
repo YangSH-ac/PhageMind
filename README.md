@@ -37,6 +37,6 @@ conda activate phagemind
 ## Usage
 For detailed instruction, refer to `code/STEPS.md`.
 
-For dataset, refer to `data/DATA.md`. Please download all the data before trying to run the examples inside the `code/STEPS.md`.
+For dataset, refer to `data/DATA.md`. You may need to download some data before trying to run the examples inside the `code/STEPS.md`.
 ## References
 The arXiv version can be found via: [arXiv version](https://arxiv.org/abs/2601.15886)
