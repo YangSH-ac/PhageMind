@@ -125,7 +125,6 @@ optional arguments:
   -r, --relax           Allow `P1` `P2` relaxed candidates with gap up to 3x threshold (`P4` will always output relaxed candidates)
   -l FILE, --log FILE   Log file (default <outdir>/<input>.log)
 ```
-
 ## 1.2 Phages
 For phage genomes, we recommend to use [pharokka](https://github.com/gbouras13/pharokka) for protein translation and annotation.
 
