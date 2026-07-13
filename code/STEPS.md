@@ -283,4 +283,4 @@ optional arguments:
   -p INT               Number of patience (default: 50)
 ```
 
-#### Feel free to email me at yshen86@my.cityu.edu.hk should you have any questions.
+#### Feel free to <a href="mailto:&#121;&#115;&#104;&#101;&#110;&#056;&#054;&#064;&#109;&#121;&#046;&#099;&#105;&#116;&#121;&#117;&#046;&#101;&#100;&#117;&#046;&#104;&#107;">email me</a> should you have any questions.
