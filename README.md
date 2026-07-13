@@ -1,7 +1,7 @@
 # PhageMind
 PhageMind is designed to predict interactions between phages and bacterial strains within target genera. The general inputs include genomes from bacteria and phages (fasta files), with some known interactions between them. 
 ## Prepare the environment
-We suggest to install most of packages using conda (https://anaconda.org/) if available.
+We suggest to install most of packages using [conda](https://anaconda.org/) if available.
 
 The main model is built under `torch-geometric`, but first `pytorch` is needed for further installation:
 ```
