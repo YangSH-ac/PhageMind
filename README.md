@@ -39,4 +39,8 @@ For detailed instruction, refer to `code/STEPS.md`.
 
 For dataset, refer to `data/DATA.md`. You may need to download some data before trying to run the examples inside the `code/STEPS.md`.
 ## References
+Please cite:
+
+Yang Shen, Keming Shi, Chen Yu, Rui Zhang, Yanni Sun, Jiayu Shang, PhageMind: generalized strain-level phage host range prediction via meta-learning, Bioinformatics, Volume 42, Issue Supplement_1, July 2026, btag262, https://doi.org/10.1093/bioinformatics/btag262
+
 The arXiv version can be found via: [arXiv version](https://arxiv.org/abs/2601.15886)
