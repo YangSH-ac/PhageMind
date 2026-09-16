@@ -230,6 +230,9 @@ python SplitData.py -i ../data/InputDir -o ../data/SplitDir
 ```
 Then proceed with fine‑tuning
 ```
+# Using the model file directly saved by MAML.py.
+python MlFunetun.py -i ../data/SplitDir -o ../data/OutputDir -m ../data/MAMLDir/best_maml_model.pth
+# Here you may use the pre-trained model offered.
 python MlFunetun.py -i ../data/SplitDir -o ../data/OutputDir -m ../data/MAMLDir/MAML_best_model.pth
 ```
 If you would like to use a trained model, say Escherichia, you can run:
