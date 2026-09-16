@@ -224,6 +224,7 @@ if __name__ == "__main__":
     for g in valid_dirs:
         train_d, valid_d, test_d = prepare_task_data(matched_groups[g], args, device=device)
         all_val_data.append({'train_data': train_d, 'valid_data': valid_d, 'test_data': test_d, 'genus': matched_groups[g]['wildcard']})
+    os.makedirs(args.o, exist_ok=True)
     best_valid_loss = float('inf')
     patience_counter = 0
     for meta_step in range(args.ep):
@@ -260,7 +261,7 @@ if __name__ == "__main__":
                     printd("Early stopping triggered.")
                     break
     printd("Loading best model for testing...")
-    model.load_state_dict(torch.load(os.path.join(args.o, 'MAML_best_model.pth'), weights_only=True))
+    model.load_state_dict(torch.load(os.path.join(args.o, 'best_maml_model.pth'), weights_only=True))
     model.eval()
     for g in [*all_train_data, *all_val_data]:
         printd(f"Testing on dataset: {g['genus']}")
