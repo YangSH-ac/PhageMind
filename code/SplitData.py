@@ -12,7 +12,7 @@ if __name__ == "__main__":
     args = parse_args()
 import os,torch
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from src.my_train_related import find_file_groups,prepare_task_data,save_graph_data,printd
+from src.my_train import find_file_groups,prepare_task_data,save_graph_data,printd
 import numpy as np
 if __name__ == "__main__":
     matched_groups = find_file_groups(args.i)
