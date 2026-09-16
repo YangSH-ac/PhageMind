@@ -233,10 +233,10 @@ if __name__ == "__main__":
     torch.autograd.set_detect_anomaly(True)
     if args.mt == 1: 
         printd("Using GCNLinkPredictShare model.")
-        from my_model import GCNLinkPredictShare as ModelClass
+        from src.my_model import GCNLinkPredictShare as ModelClass
     if args.mt == 2: 
         printd("Using MLPLinkPredictShare model.")
-        from my_model import MLPLinkPredictShare as ModelClass
+        from src.my_model import MLPLinkPredictShare as ModelClass
     model = ModelClass(args.sd, data_train.x.shape[1], args.ss, args.a).to(device)
     if args.m:
         printd(f"Loading pretrained model from {args.m}...")
