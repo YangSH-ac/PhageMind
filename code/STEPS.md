@@ -1,5 +1,6 @@
 # STEPS for model
 It's better to unpack the data file and move them all into `data` directory for convenience when running examples below.
+If you encounted some errors, please refer to ''Issues'' and some solution may be found. I will also try to fix them as soon as possible.
 # 1. Input processing
 ## 1.1 Bacteria
 For bacterial genomes, we recommend to use [RAST](https://rast.nmpdr.org/) for protein translation and annotation.
